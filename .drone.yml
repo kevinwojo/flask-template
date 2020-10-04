@@ -1,0 +1,42 @@
+---
+kind: pipeline
+type: docker
+name: backend
+   
+steps:
+- name: build 
+  image: python:alpine3.12
+  commands:
+  - pip install -r requirements.txt 
+
+          #- name: build
+          #  privledged: true
+          #  image: docker:dind
+          #  volumes:
+          #  - name: dockersock
+          #    path: /var/run/docker.sock
+          #  commands:
+          #    - "docker build -t backend:${DRONE_TAG} ."
+          #  when:
+          #    ref:
+          #      include:
+          #        - refs/tags/*
+          #    event:
+          #      exclude:
+          #        - promote
+          #
+          #- name: deploy
+          #  image: alpine
+          #  commands:
+          #    - echo "Deployment placeholder"
+          #    - echo "Deploy ${DRONE_TAG} to ${DRONE_DEPLOY_TO}."
+          #  when:
+          #    ref:
+          #      include:
+          #        - refs/tags/*
+          #    event:
+          #      - promote
+          #
+          #volumes:
+          #  - name: dockersock
+          #    host:
