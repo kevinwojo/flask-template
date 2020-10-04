@@ -5,9 +5,9 @@ name: backend
    
 steps:
 - name: build 
-  image: python:alpine3.12
+  image: python:3.12
   commands:
-  - pip install -r requirements.txt 
+  - make build
 
           #- name: build
           #  privledged: true
