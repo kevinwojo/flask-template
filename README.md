@@ -41,6 +41,9 @@ Using the configuration value in code would appear like this:
 print(Config.APP_VERSION)
 ```
 
+By moving configuration into the environment, it increases the portability of the service. This practice
+allows automation in the deployment pipeline to manage the service's configuration and secrets at scale.
+
 
 ### Code Formatting
 This repository uses [`black`](https://github.com/psf/black) to format code. This is to produce more consistent
@@ -68,9 +71,19 @@ A non-root application user called "appuser" is added to an "appgroup". This hel
 and mitigate against jailbreak attacks. This is considered [best practice by Docker](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user).
 
 ### Docker Compose
+This repository provides a `docker-compose.yml` file to provide a local development environment. It contains a stanza 
+for the Flask application, Prometheus, and Grafana. You may elect to use `docker-compose` commands or use the Makefile.
+
+  * `make up` implements `docker-compose up -d --build`
+  * `make down` implements `docker-compose down`
+  * `make monitor` implements `docker-compose logs -f`
 
 ### Grafana
-TBD
+[Grafana is a UI](https://grafana.com/docs/grafana/latest/) that allows you to query, visualize, and alert on metrics. There are many backends that you may connect.
+It is included in this project to encourage the development of metrics, dashboards, and alerts alongside your application
+code.
+
+Read more about Grafana in their documentation: https://grafana.com/docs/grafana/latest/
 
 ### Gunicorn
 [Flask's built-in server is not suitable for production.](https://flask.palletsprojects.com/en/1.1.x/deploying/). This 
