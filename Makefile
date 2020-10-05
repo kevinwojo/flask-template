@@ -22,6 +22,9 @@ login:
 #
 # Build & Test
 #
+format:
+	black .
+
 build : requirements.txt
 	pip install -r requirements.txt
 

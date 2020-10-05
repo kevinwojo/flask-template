@@ -22,12 +22,31 @@ This repository assumes that you have some prerequisites that are outside the sc
 There is a lot of functionality that is assumed when cloning this repository.
 These sections provide more details about the components so that you can hit the ground running.
 
-### Makefile
-This project makes use of a `Makefile`. This is used to capture complex build steps in order to make 
-the build-test process consistent between local development, the Dockerfile, and the CI pipeline.
+### 12-Factor Application Configuration
+This project aims to follow the tenants of [The Twelve-Factor App Configuration](https://12factor.net/config).
+All configuration items are implemented as **environment variables**. For example in `config/config.py`:
 
-The Makefile should call external scripts where necessary, at this time the `build-scripts/` directory is
-the designated area for these files.
+```
+class Config:
+    APP_ENV=os.getenv("APP_ENV", "development")
+    APP_VERSION=os.getenv("APP_VERSION", "unset")
+```
+
+Each config value is implemented as an environment variable. The current convention uses all UPPER-CASE
+lettering with underscores separating words. This should help make it apparent the source is an environment variable.
+
+Using the configuration value in code would appear like this:
+
+```
+print(Config.APP_VERSION)
+```
+
+
+### Code Formatting
+This repository uses [`black`](https://github.com/psf/black) to format code. This is to produce more consistent
+and readable code.
+
+`make format` runs black against the repository.
 
 ### Continuous Integration (CI) Pipeline
 Where possible, the CI pipeline that is implemented should make use of the make commands.
@@ -40,10 +59,6 @@ Generally-speaking the process should the following flow:
 ## Continuous Deployment
 TBD
 
-### Trunk-Based Branching
-The automation in this repository favors a [trunk-based branching strategy](https://trunkbaseddevelopment.com/).
-This strategy reduces the need for complex automation to deal with the overhead introduced by other branching techniques
-and lends itself to immutable and fully-tested builds.
 
 ### Dockerfile
 The Dockerfile in this repository is structured to attempt to make good use of [build caching](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#leverage-build-cache). The ordering of the `RUN` and `COPY` directives
@@ -64,11 +79,12 @@ number of worker processes.
 
 For information on why the built-in server is not suitable for production, [review this answer on StackOverflow.](https://stackoverflow.com/a/20862119)
 
+### Makefile
+This project makes use of a `Makefile`. This is used to capture complex build steps in order to make 
+the build-test process consistent between local development, the Dockerfile, and the CI pipeline.
 
-### Semantic Versioning
-This repository implements [Semantic Versioning 2.0.0](https://semver.org/). This allows for 
-the service to make use of a meaningful artifact-based deployment. This gives confidence that the correct
-revision of software is deployed into an environment and improves the posture in terms of roll-back.
+The Makefile should call external scripts where necessary, at this time the `build-scripts/` directory is
+the designated area for these files.
 
 ### Prometheus
 [Prometheus](https://prometheus.io/) is an open-source, time-series-based, monitoring solution. There is a large
@@ -80,3 +96,13 @@ Review Prometheus' [best practices](https://prometheus.io/docs/practices/naming/
 ### Prometheus Python Exporter
 The Flask application imports [prometheus-flask-exporter](https://pypi.org/project/prometheus-flask-exporter/)
 to instrument all Flask endpoints for Prometheus' consumption. This implements the [official Prometheus Python client](https://github.com/prometheus/client_python) and has a convenient wrapper around the [Gunicorn interface](https://github.com/prometheus/client_python#multiprocess-mode-gunicorn).
+
+### Semantic Versioning
+This repository implements [Semantic Versioning 2.0.0](https://semver.org/). This allows for 
+the service to make use of a meaningful artifact-based deployment. This gives confidence that the correct
+revision of software is deployed into an environment and improves the posture in terms of roll-back.
+
+### Trunk-Based Branching
+The automation in this repository favors a [trunk-based branching strategy](https://trunkbaseddevelopment.com/).
+This strategy reduces the need for complex automation to deal with the overhead introduced by other branching techniques
+and lends itself to immutable and fully-tested builds.
